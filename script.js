@@ -1,0 +1,103 @@
+let main = document.querySelector('main');
+let info = document.querySelector('.information');
+let grid = document.querySelector('.grid');
+let score = document.querySelector('.scorecount');
+let highscore = document.querySelector('.highscore');
+let timer = document.querySelector('.timing');
+const blockheight = 40;
+const blockwidth = 40;
+let cols = Math.floor(grid.clientWidth/blockwidth);
+let rows = Math.floor(grid.clientHeight/blockheight);
+let total_blocks = Math.floor(cols*rows);
+
+for(let i = 0;i <total_blocks;i++){
+    let block =  document.createElement('div');
+    block.classList.add('blocks');
+    block.style.height = blockheight + 'px';
+    block.style.width = blockwidth + 'px';
+    block.style.border = '1px solid white'
+    grid.appendChild(block);
+}
+
+let squares = [...document.querySelectorAll('.blocks')];
+let currentsnake = [2,1,0]; //inital position
+// let tail = currentsnake.at(-1);
+let intervaltime = 200;
+let intervalsecond = 1000;
+let showtimeid =0;
+let timerId = 0;
+let seconds = 0;
+let mins;
+let secs;
+let M;
+let s;
+let direction = 1; //right
+let currentscore = 0;
+let currenthighscore = Number(localStorage.getItem('highscore')?? 0); 
+highscore.textContent = `High-Score:${currenthighscore}`;
+
+currentsnake.forEach(index => squares[index].classList.add('snake'));
+
+function move(){
+    const head = currentsnake[0];
+    const nextstep = head+direction;
+    //collision
+    if((direction === 1 && head%cols === cols-1) ||(direction === -1 && head%cols === 0) 
+    ||(direction === cols && head+cols >= total_blocks)||(direction === -cols && head-cols < 0)||squares[nextstep].classList.contains('snake')){
+     return gameover();}
+    if(squares[nextstep].classList.contains('apple')){
+        squares[nextstep].classList.remove('apple');
+        GenerateApple();
+        currentscore++
+        score.textContent = `Score:${currentscore}`;
+        if(currentscore > currenthighscore){
+            currenthighscore = currentscore;
+            highscore.textContent = `High-Score:${currenthighscore}`;
+            localStorage.setItem('highscore',currenthighscore);
+        }
+    }else{
+    let removedtail = currentsnake.pop();
+    squares[removedtail].classList.remove('snake');
+    }
+    const newheadindex = head + direction;
+    currentsnake.unshift(newheadindex);
+    squares[newheadindex].classList.add('snake');
+
+}
+function GenerateApple(){
+    let AppleIndex;
+
+    do{
+        AppleIndex = Math.floor(Math.random()*squares.length);
+    }while(squares[AppleIndex].classList.contains('snake'));
+
+    squares[AppleIndex].classList.add('apple');
+}
+GenerateApple();
+function clock(){
+     seconds++;
+     mins = Math.floor(seconds/60);
+     secs = seconds%60;
+     m = String(mins).padStart(2,0);
+     s = String(secs).padStart(2,0);
+     timer.textContent = `Timing:${m}-${s}`;
+}
+function control(e){
+    if(e.key === 'ArrowRight' && direction!== -1) direction =1;
+    else if(e.key === 'ArrowLeft' && direction!== 1) direction =-1;
+    else if(e.key === 'ArrowUp' && direction !== cols) direction = -cols;
+    else if(e.key === 'ArrowDown' && direction!== -cols) direction = cols;
+}
+document.addEventListener('keydown',control);
+
+function gameover(){
+    clearInterval(timerId);
+    clearInterval(showtimeid);
+    alert('game over');
+}
+
+function startgame(){
+    timerId = setInterval(move,intervaltime);
+    showtimeid = setInterval(clock,intervalsecond);
+}
+startgame();

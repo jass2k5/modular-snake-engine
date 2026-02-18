@@ -1,0 +1,13 @@
+@use '../utils/utils' as *;
+.information{
+    grid-area: information;
+    background-color: var(--body-clr);
+    @include flex-gap(20px,row,center,space-around);
+    padding: auto;
+    border-radius: 1rem;
+    border: 1px solid white;
+    &>*>span,i{
+          font-size: clamp(0.8rem,2vh + 0.6rem,1.5rem);
+          font-weight: 800;
+    }
+}

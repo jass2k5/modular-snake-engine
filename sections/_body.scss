@@ -1,0 +1,13 @@
+@use '../utils/utils' as *;
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+html,body{
+    height: 100%;
+    width: 100%;
+    background-color: var(--body-clr);
+    padding: var(--body-padding);
+    color: var(--info-clr2);
+}

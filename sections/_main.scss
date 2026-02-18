@@ -1,0 +1,15 @@
+@use '../utils/utils' as *;
+main{
+    position: relative;
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 70px 1fr;
+    grid-template-rows: 60px 1fr;
+    grid-template-areas: 'information information'
+                         'grid grid';
+   
+    padding: var(--main-padding);
+    background-color: var(--body-clr);
+    row-gap: 0.8rem;
+}
