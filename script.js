@@ -4,17 +4,18 @@ let grid = document.querySelector('.grid');
 let score = document.querySelector('.scorecount');
 let highscore = document.querySelector('.highscore');
 let timer = document.querySelector('.timing');
-const blockheight = 40;
-const blockwidth = 40;
 let cols = Math.floor(grid.clientWidth/blockwidth);
 let rows = Math.floor(grid.clientHeight/blockheight);
 let total_blocks = Math.floor(cols*rows);
 
+grid.style.gridTemplateColumns = `repeat(${cols}, minmax(0, 1fr))`;
+grid.style.gridTemplateRows = `repeat(${rows}, minmax(0, 1fr))`;
+
 for(let i = 0;i <total_blocks;i++){
     let block =  document.createElement('div');
     block.classList.add('blocks');
-    block.style.height = blockheight + 'px';
-    block.style.width = blockwidth + 'px';
+    block.style.height = '100%';
+    block.style.width = '100%';
     block.style.border = '1px solid white'
     grid.appendChild(block);
 }
