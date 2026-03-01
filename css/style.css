@@ -70,8 +70,8 @@ main {
   height: 100%;
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
-  grid-template-rows: repeat(auto-fill, minmax(40px, 1fr));
+  position: relative;
+  z-index: 0;
 }
 .grid .snake {
   background-color: yellow;
@@ -80,4 +80,41 @@ main {
 .grid .apple {
   background-color: red;
   border-radius: 1rem;
+}
+.grid .gameinformation {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.678);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  flex-direction: column;
+  z-index: 1;
+}
+.grid .gameinformation .reason {
+  font-size: var(--space-smd);
+}
+.grid .gameinformation .gameovertext {
+  font-size: var(--space-md);
+}
+.grid .gameinformation #btn {
+  font-family: inherit;
+  font-size: var(--space-smd);
+  padding: var(--space-xs);
+  border-radius: var(--space-xs);
+  cursor: pointer;
+  font-weight: 800;
+}
+.grid .gameinformation #btn:active {
+  transform: scale(0.9);
+}
+.grid .gameinformation #btn:hover {
+  color: white;
+  background-color: rgba(0, 0, 0, 0.521);
+  border: 1px solid white;
 }/*# sourceMappingURL=style.css.map */

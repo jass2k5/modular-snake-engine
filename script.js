@@ -4,18 +4,20 @@ let grid = document.querySelector('.grid');
 let score = document.querySelector('.scorecount');
 let highscore = document.querySelector('.highscore');
 let timer = document.querySelector('.timing');
-const blockheight = 40;
-const blockwidth = 40;
+let hidden = document.querySelector('#hidden');
+let reason = document.querySelector('.reason');
+let gameovertext = document.querySelector('.gameovertext');
+let resetbtn = document.querySelector('#btn');
+const blockheight = 50;
+const blockwidth = 50;
 let cols = Math.floor(grid.clientWidth/blockwidth);
 let rows = Math.floor(grid.clientHeight/blockheight);
 let total_blocks = Math.floor(cols*rows);
-grid.style.gridTemplateColumns = `repeat(${cols},minmax(0,1fr))`;
-grid.style.gridTemplateRows = `repeat(${rows},minmax(0,1fr))`;
+grid.style.gridTemplateColumns = `repeat(${cols},minmax(0px,1fr))`;
+grid.style.gridTemplateRows = `repeat(${rows},minmax(0px,1fr))`;
 for(let i = 0;i <total_blocks;i++){
     let block = document.createElement('div');
     block.classList.add('blocks');
-    block.style.height =  blockheight +'px';
-    block.style.width =  blockwidth + 'px';
     block.style.border = '1px solid white'
     grid.appendChild(block);
 }
@@ -55,7 +57,8 @@ function move(){
     if(squares[nextstep].classList.contains('apple')){
         squares[nextstep].classList.remove('apple');
         GenerateApple();
-        currentscore++
+        currentscore++;
+        intervaltime--;
         score.textContent = `Score:${currentscore}`;
         if(currentscore > currenthighscore){
             currenthighscore = currentscore;
@@ -85,8 +88,8 @@ function clock(){
      seconds++;
      mins = Math.floor(seconds/60);
      secs = seconds%60;
-     m = String(mins).padStart(2,0);
-     s = String(secs).padStart(2,0);
+     m = String(mins).padStart(2,'0');
+     s = String(secs).padStart(2,'0');
      timer.textContent = `Timing:${m}-${s}`;
 }
 function control(e){
@@ -106,19 +109,44 @@ function control(e){
 }
 document.addEventListener('keydown',control);
 
+function gameoverdisplay(reasons){
+    hidden.style.display = "flex";
+    reason.textContent = `${reasons}`;
+    gameovertext.textContent = 'GAME OVER!';
+    resetbtn.textContent = 'RESET';
+    currentsnake.forEach(index => squares[index].classList.remove('snake'));
+    squares.forEach(sq => {
+    if (sq.classList.contains('apple')) {
+        sq.classList.remove('apple');
+    }
+});
+    intervaltime = 200;
+    seconds = 0;
+    timer.textContent = `Timing:00-00`;
+    currentscore = 0;
+    score.textContent = `Score:0`;
+    direction = 1;
+    currentsnake = [2,1,0];
+    currentsnake.forEach(index => squares[index].classList.add('snake'));
+    GenerateApple();
+    
+}
 function gameover(){
     clearInterval(timerId);
     clearInterval(showtimeid);
-    alert('game over');
+    gameoverdisplay("YOU LIKELY HIT THE WALL");
 }
 function ateitself(){
     clearInterval(timerId);
     clearInterval(showtimeid);
-    alert("hit hitself");
+    gameoverdisplay("TRY NOT TO EAT YOURSELD")
 }
 
 function startgame(){
     timerId = setInterval(move,intervaltime);
     showtimeid = setInterval(clock,intervalsecond);
 }
-startgame();
+resetbtn.addEventListener("click",() =>{
+    hidden.style.display = "none";
+    startgame();
+})
