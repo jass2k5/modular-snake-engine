@@ -4,18 +4,18 @@ let grid = document.querySelector('.grid');
 let score = document.querySelector('.scorecount');
 let highscore = document.querySelector('.highscore');
 let timer = document.querySelector('.timing');
+const blockheight = 40;
+const blockwidth = 40;
 let cols = Math.floor(grid.clientWidth/blockwidth);
 let rows = Math.floor(grid.clientHeight/blockheight);
 let total_blocks = Math.floor(cols*rows);
-
-grid.style.gridTemplateColumns = `repeat(${cols}, minmax(0, 1fr))`;
-grid.style.gridTemplateRows = `repeat(${rows}, minmax(0, 1fr))`;
-
+grid.style.gridTemplateColumns = `repeat(${cols},minmax(0,1fr))`;
+grid.style.gridTemplateRows = `repeat(${rows},minmax(0,1fr))`;
 for(let i = 0;i <total_blocks;i++){
-    let block =  document.createElement('div');
+    let block = document.createElement('div');
     block.classList.add('blocks');
-    block.style.height = '100%';
-    block.style.width = '100%';
+    block.style.height =  blockheight +'px';
+    block.style.width =  blockwidth + 'px';
     block.style.border = '1px solid white'
     grid.appendChild(block);
 }
@@ -33,6 +33,7 @@ let secs;
 let M;
 let s;
 let direction = 1; //right
+let changingdirection = true;
 let currentscore = 0;
 let currenthighscore = Number(localStorage.getItem('highscore')?? 0); 
 highscore.textContent = `High-Score:${currenthighscore}`;
@@ -42,10 +43,15 @@ currentsnake.forEach(index => squares[index].classList.add('snake'));
 function move(){
     const head = currentsnake[0];
     const nextstep = head+direction;
+
     //collision
     if((direction === 1 && head%cols === cols-1) ||(direction === -1 && head%cols === 0) 
-    ||(direction === cols && head+cols >= total_blocks)||(direction === -cols && head-cols < 0)||squares[nextstep].classList.contains('snake')){
+    ||(direction === cols && head+cols >= total_blocks)||(direction === -cols && head-cols < 0)){
      return gameover();}
+    if(squares[nextstep].classList.contains('snake')){
+        return ateitself();
+
+    }
     if(squares[nextstep].classList.contains('apple')){
         squares[nextstep].classList.remove('apple');
         GenerateApple();
@@ -63,7 +69,7 @@ function move(){
     const newheadindex = head + direction;
     currentsnake.unshift(newheadindex);
     squares[newheadindex].classList.add('snake');
-
+    changingdirection = true;
 }
 function GenerateApple(){
     let AppleIndex;
@@ -84,10 +90,19 @@ function clock(){
      timer.textContent = `Timing:${m}-${s}`;
 }
 function control(e){
-    if(e.key === 'ArrowRight' && direction!== -1) direction =1;
-    else if(e.key === 'ArrowLeft' && direction!== 1) direction =-1;
-    else if(e.key === 'ArrowUp' && direction !== cols) direction = -cols;
-    else if(e.key === 'ArrowDown' && direction!== -cols) direction = cols;
+    if(changingdirection){
+    if(e.key === 'ArrowRight' && direction!== -1) {
+        direction =1;
+        changingdirection = false;}
+    else if(e.key === 'ArrowLeft' && direction!== 1){
+        direction =-1;
+        changingdirection = false;}
+    else if(e.key === 'ArrowUp' && direction !== cols){
+        direction = -cols;
+        changingdirection = false;}
+    else if(e.key === 'ArrowDown' && direction!== -cols){ 
+        direction = cols;
+        changingdirection = false;}}
 }
 document.addEventListener('keydown',control);
 
@@ -95,6 +110,11 @@ function gameover(){
     clearInterval(timerId);
     clearInterval(showtimeid);
     alert('game over');
+}
+function ateitself(){
+    clearInterval(timerId);
+    clearInterval(showtimeid);
+    alert("hit hitself");
 }
 
 function startgame(){
