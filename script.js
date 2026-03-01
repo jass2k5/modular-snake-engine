@@ -58,7 +58,11 @@ function move(){
         squares[nextstep].classList.remove('apple');
         GenerateApple();
         currentscore++;
-        intervaltime--;
+        if(intervaltime > 50){
+            clearInterval(timerId);
+            intervaltime = intervaltime*0.95;     
+            timerId = setInterval(move,intervaltime);
+          }
         score.textContent = `Score:${currentscore}`;
         if(currentscore > currenthighscore){
             currenthighscore = currentscore;
