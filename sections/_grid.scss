@@ -1,19 +1,32 @@
 @use '../utils/utils' as *;
 .grid{
     grid-area: grid;
-    border: 1px solid white;
+    background-color: whitesmoke;
     height: 100%;
     width: 100%;
     display: grid;
     position: relative;
     z-index: 0;
     .snake{
+        background: radial-gradient(circle,yellow 40%, rgb(144, 177, 52) 50%);
+        border-radius: 1rem;
+    
+    }
+    .snake-head{
+        background-image: url("../img/snake\ -\ Copy.png");
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
         background-color: yellow;
-        border-radius: 0.2rem;
+        z-index: 2;
     }
     .apple{
         background-color: red;
-        border-radius: 1rem;
+        background-image: url('../img/fresh-ripe-apple-cartoon-type-600nw-2564949663.webp');
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+         
     }
     .gameinformation{
         position: absolute;
@@ -50,8 +63,5 @@
             }
         }
   
-    }
-    #hidden{
-       
     }
 }

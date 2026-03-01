@@ -18,7 +18,7 @@ grid.style.gridTemplateRows = `repeat(${rows},minmax(0px,1fr))`;
 for(let i = 0;i <total_blocks;i++){
     let block = document.createElement('div');
     block.classList.add('blocks');
-    block.style.border = '1px solid white'
+    block.style.border = '1px solid green'
     grid.appendChild(block);
 }
 
@@ -42,10 +42,12 @@ highscore.textContent = `High-Score:${currenthighscore}`;
 
 currentsnake.forEach(index => squares[index].classList.add('snake'));
 
+squares[currentsnake[0]].classList.add('snake-head');
+////
+
 function move(){
     const head = currentsnake[0];
     const nextstep = head+direction;
-
     //collision
     if((direction === 1 && head%cols === cols-1) ||(direction === -1 && head%cols === 0) 
     ||(direction === cols && head+cols >= total_blocks)||(direction === -cols && head-cols < 0)){
@@ -54,6 +56,7 @@ function move(){
         return ateitself();
 
     }
+  
     if(squares[nextstep].classList.contains('apple')){
         squares[nextstep].classList.remove('apple');
         GenerateApple();
@@ -73,9 +76,12 @@ function move(){
     let removedtail = currentsnake.pop();
     squares[removedtail].classList.remove('snake');
     }
+    squares[head].classList.remove('snake-head');
     const newheadindex = head + direction;
     currentsnake.unshift(newheadindex);
     squares[newheadindex].classList.add('snake');
+    squares[newheadindex].classList.add('snake-head');
+
     changingdirection = true;
 }
 function GenerateApple(){
@@ -124,6 +130,7 @@ function gameoverdisplay(reasons){
         sq.classList.remove('apple');
     }
 });
+    squares[currentsnake[0]].classList.remove('snake-head');
     intervaltime = 200;
     seconds = 0;
     timer.textContent = `Timing:00-00`;
@@ -132,6 +139,7 @@ function gameoverdisplay(reasons){
     direction = 1;
     currentsnake = [2,1,0];
     currentsnake.forEach(index => squares[index].classList.add('snake'));
+    squares[currentsnake[0]].classList.add('snake-head');
     GenerateApple();
     
 }
